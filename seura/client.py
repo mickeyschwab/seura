@@ -115,6 +115,14 @@ class SeuraClient:
             raise ValueError("Invalid power response")
 
     # Input functions
+    def get_inputs(self) -> list[str]:
+        """Get the list of available input sources.
+        
+        Returns:
+            List of input source names
+        """
+        return list(INPUT_MAP.keys())
+
     def set_input(self, input_source: str) -> bool:
         """Set the input source.
         
