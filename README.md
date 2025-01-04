@@ -18,8 +18,11 @@ Here's a basic example of how to use the Seura Python Client:
 ```python
 from seura import SeuraClient
 
-# Initialize the client
-client = SeuraClient(ip_address='192.168.1.100')
+# Initialize the client with IP address
+client = SeuraClient(address='192.168.1.100')
+
+# Or initialize with hostname
+client = SeuraClient(address='my.tv.local')
 
 # Turn on the TV
 client.power_on()

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "seura"
-version = "0.2.4"
+version = "0.3.0"
 description = "Python client for Seura TV IP Control"
 authors = [{name = "Mickey Schwab", email = "mickeyschwab@gmail.com"}]
 license = {file = "LICENSE"}

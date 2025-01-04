@@ -13,16 +13,25 @@ logging.basicConfig(level=logging.INFO)
 class SeuraClient:
     """Client for controlling Seura displays via network commands."""
 
-    def __init__(self, ip_address: str, port: int = 4453) -> None:
+    def __init__(self, host: str, port: int = 4453, timeout_seconds: float = 1.0) -> None:
         """Initialize the Seura client.
         
         Args:
-            ip_address: IP address of the Seura display
+            host: IP address or hostname of the Seura display
             port: Port number for communication (default: 4453)
+            timeout_seconds: Socket timeout in seconds (default: 1.0)
         """
-        self.ip_address = ip_address
-        self.port = port
-        logging.info(f"Initialized Seura client with IP: {ip_address}")
+        try:
+            # Try to resolve the hostname to an IP address
+            self.ip_address = socket.gethostbyname(host)
+            if self.ip_address != host:
+                logging.info(f"Resolved hostname {host} to IP: {self.ip_address}")
+            self.port = port
+            self.timeout_seconds = timeout_seconds
+            logging.info(f"Initialized Seura client with IP: {self.ip_address}")
+        except socket.gaierror as e:
+            logging.error(f"Failed to resolve hostname {host}: {e}")
+            raise SeuraConnectionError(f"Failed to resolve hostname {host}: {e}")
 
     def send_command(self, command: str, data: str = "") -> str:
         """Send a command to the Seura display.
@@ -37,10 +46,14 @@ class SeuraClient:
         )
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.settimeout(self.timeout_seconds)
                 sock.connect((self.ip_address, self.port))
                 sock.sendall(message.encode("ascii"))
                 response = sock.recv(1024).decode("ascii")
             logging.info(f"Received response: {response.strip()}")
+        except socket.timeout:
+            logging.error("Connection timed out")
+            raise SeuraConnectionError("Connection timed out")
         except socket.error as e:
             logging.error(f"Socket error: {e}")
             raise SeuraConnectionError(f"Failed to communicate with display: {e}")
