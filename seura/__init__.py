@@ -8,7 +8,7 @@ from .exceptions import (
     SeuraConnectionError,
 )
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 __all__ = [
     "SeuraClient",
     "INPUT_MAP",

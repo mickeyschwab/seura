@@ -196,7 +196,7 @@ class SeuraClient:
         """
         logging.info(f"Setting volume to: {level}")
         if 0 <= level <= 100:
-            return self.send_command("VOLU", f"{level:03}") == "OK"
+            return self.send_command("VOLU", level) == "OK"
         logging.error("Invalid volume level attempted.")
         raise ValueError("Volume level must be between 0 and 100")
 
